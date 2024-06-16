@@ -133,6 +133,11 @@ class BaseEdusScraper:
             grades_elements = self._driver.find_elements(
                 By.XPATH, "//span[contains(@class, 'student-grade')]"
             )
+            grades_elements = (
+                el
+                for el in grades_elements
+                if "deleted" not in str(el.get_attribute("class"))
+            )
             grades_elements = (el.text.split("/") for el in grades_elements)
             grades += [
                 Grade(subject, parse_date(d), int(grade))
