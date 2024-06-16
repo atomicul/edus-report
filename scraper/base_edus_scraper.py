@@ -1,7 +1,7 @@
 import functools
 from datetime import date
 import itertools
-from typing import Dict, List, Callable, Optional, Tuple, Any
+from typing import Dict, List, Callable, Optional, Tuple
 from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
@@ -38,6 +38,13 @@ class BaseEdusScraper:
         return self._driver.find_element(
             By.XPATH, "//div[contains(@class, 'user-details')]/div"
         ).text
+
+    def get_year_wide_average(
+        self, *, progress: Callable[[float], None] = lambda _: None
+    ) -> float:
+        grades = self.get_grades_by_subject(progress=progress)
+        averages = [round(sum(x.grade for x in x) / len(x)) for x in grades.values()]
+        return round(sum(averages) / len(averages), 2)
 
     def get_absences(
         self, *, progress: Callable[[float], None] = lambda _: None
