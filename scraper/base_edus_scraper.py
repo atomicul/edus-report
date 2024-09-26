@@ -1,3 +1,4 @@
+import re
 import functools
 from datetime import date
 import itertools
@@ -35,9 +36,13 @@ class BaseEdusScraper:
     @property
     @functools.cache
     def account_name(self):
-        return self._driver.find_element(
-            By.XPATH, "//div[contains(@class, 'user-details')]/div"
-        ).text
+        return (
+            self._driver.find_element(
+                By.XPATH, "(//nav[contains(@id, 'user-menu')]//span)[last()]"
+            )
+            .text.split("\n")[0]
+            .strip()
+        )
 
     def get_year_wide_average(
         self, *, progress: Callable[[float], None] = lambda _: None
@@ -86,7 +91,11 @@ class BaseEdusScraper:
         page_subtitle = self._driver.find_element(
             By.XPATH, "//div[contains(@class, 'page-subtitle')]"
         ).text
-        school_year = int(page_subtitle.split()[-1])
+        school_year = [
+            int(word)
+            for word in page_subtitle.split()
+            if re.search("^20[0-9][0-9]$", word)
+        ][-1]
 
         subjects = self._driver.find_elements(
             By.XPATH, "//select[contains(@class, 'course-select')]/option"

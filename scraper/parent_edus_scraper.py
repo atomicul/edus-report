@@ -18,16 +18,15 @@ class ParentEdusScraper(BaseEdusScraper):
     @property
     @functools.cache
     def students(self):
-        student_item_selector = "//i[contains(@class, 'fa-user-graduate')]"
+        student_item_selector = "//img[contains(@src, 'icons/student')]/.."
 
-        name_elements = self._driver.find_elements(
-            By.XPATH, f"{student_item_selector}/.."
-        )
+        name_elements = self._driver.find_elements(By.XPATH, student_item_selector)
         names = (el.text for el in name_elements)
+        names = (name.strip() for name in names)
 
         link_elements = self._driver.find_elements(
             By.XPATH,
-            f"{student_item_selector}/../..//a[contains(text(), 'Situatie scolara')]",
+            f"{student_item_selector}/..//a[contains(@href, 'situatie-scolara')]",
         )
         links = (str(el.get_property("href")) for el in link_elements)
 
