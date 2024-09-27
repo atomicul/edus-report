@@ -5,6 +5,7 @@ import itertools
 from typing import Dict, List, Callable, Optional, Tuple
 from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.common.by import By
+from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support.wait import WebDriverWait
 
 from .data import Grade, Absence
@@ -127,9 +128,13 @@ class BaseEdusScraper:
                     d = date(d.year - 1, d.month, d.day)
                 return d
 
+            def is_not_deleted(x: WebElement):
+                return "deleted" not in str(x.get_attribute("class"))
+
             absence_elements = self._driver.find_elements(
                 By.XPATH, "//span[contains(@class, 'student-missing')]"
             )
+            absence_elements = filter(is_not_deleted, absence_elements)
             absences += [
                 Absence(
                     subject,
@@ -142,11 +147,7 @@ class BaseEdusScraper:
             grades_elements = self._driver.find_elements(
                 By.XPATH, "//span[contains(@class, 'student-grade')]"
             )
-            grades_elements = (
-                el
-                for el in grades_elements
-                if "deleted" not in str(el.get_attribute("class"))
-            )
+            grades_elements = filter(is_not_deleted, grades_elements)
             grades_elements = (el.text.split("/") for el in grades_elements)
             grades += [
                 Grade(subject, parse_date(d), int(grade))
