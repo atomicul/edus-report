@@ -1,4 +1,5 @@
 import re
+import time
 import functools
 from datetime import date
 import itertools
@@ -113,6 +114,7 @@ class BaseEdusScraper:
             ).click()
             self._driver.find_element(By.XPATH, f"//li[text()='{subject}']").click()
 
+            time.sleep(0.1)
             self._wait.until(
                 lambda driver: "d-none"
                 in driver.find_element(
