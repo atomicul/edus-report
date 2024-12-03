@@ -102,6 +102,7 @@ class BaseEdusScraper:
             By.XPATH, "//select[contains(@class, 'course-select')]/option"
         )
         subjects = [s.text for s in subjects]
+        subjects = [s for s in subjects if "toate" not in s.lower()]
 
         absences: List[Absence] = []
         grades: List[Grade] = []
