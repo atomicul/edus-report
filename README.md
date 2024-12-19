@@ -4,7 +4,9 @@
 
 ## Unmaintained
 
-Since the creation of this tool, the platform has improved a lot, making the script less and less useful. Because of this reason, and because of the frequency of these small changes, I have decided that I won't update this repo anymore.
+Since the creation of this tool, the platform has improved a lot, making the script less and less useful.
+Because of this reason, and because of the frequency of these small changes to the website,
+I have decided that I won't update this repo anymore.
 
 ## Instructions to run on debian:
 
